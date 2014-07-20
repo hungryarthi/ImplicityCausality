@@ -1,0 +1,17 @@
+actualVocab = [   
+
+{"story": "actual",
+				"ptype": "warmup",
+				'innuA': "seeya", 'innuB': "bye", 'innuC': "later", 'innuD': "ttyl", 'innuE': "peaceout"},
+		]; 
+
+
+("ADHESIVE","glue","puissance","tradition","argument","latent",3), 
+("DREARY","old","bloom","gloomy","correct","possible",3)
+
+
+
+final:
+
+{"story": "vocab1", "ptype": "actual", "target": "ADHESIVE", "test1":"glue","test2":puissance","test3":tradition","test4":argument","test5":latent","answer":"test3"},
+{"story": "vocab2", "ptype": "actual", "target": "DREARY", "test1":"old","test2":bloom","test3":gloomy","test4":correct","test5":possible","answer":"test3"},
