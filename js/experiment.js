@@ -28,37 +28,38 @@ function random(a,b) {
 }*/
 
 //** todo -- always update the order for slides:
-slides = ['consent', 'EQinstructions', 'EQquestions', 'Eyesinstructions', 'Eyesquestions', 'Innuinstructions', 'Innuquestions', 'Politeinstructions', 'Politequestions', 'askInfo', 'finished'];
+slides = ['consent', 'instructions', 'questions', 'finished']; //'askInfo'??
 slideStage = 0;
 
 //now show the first (consent) slide:
 
 function showNextSlide() {
-//	console.log("previous stage:");
-//	console.log(slideStage);
-//	console.log(slides[slideStage]);
-//	console.log("----------------------------------");
-//	console.log("showNEXTslide function called! counter updated:");
+	if(slides[slideStage] == "questions") {
+    	console.log("questions slide, start experiment:");
+    	experiment.start();
+    	console.log("experiment started?");
+
+    }
+
     $(".slide").hide();
     nextID = slides[slideStage];
     //console.log(nextID);
     $("#"+nextID).show();
-//    slideStage++;
-//    console.log(slideStage);
-//    console.log("next should be:");
-//    console.log(slides[slideStage]);
+    slideStage++;
+
+    
+
 }
 
-//showNextSlide();
+
+
 
 function showSlide(id) {
     $(".slide").hide();
     $("#"+id).show();
 }
 
-
-showSlide('consent');
-//console.log(slideStage);
+//showSlide('consent');
 
 
 
@@ -74,102 +75,11 @@ function isNumberKey(evt) {
     return true;
 }*/
 
-
-warmupEQ = [   /*{"story": "warmup1",
-				"ptype": "warmup",
-				"s1": "I would be very upset if I could not listen to music every day."},
-				{"story": "warmup1",
-				"ptype": "warmup",
-				"s1": "I prefer to speak to my friends on the phone rather than write letters to them."},
-				{"story": "warmup1",
-				"ptype": "warmup",
-				"s1": "I have no desire to travel to different parts of the world."},
-				{"story": "warmup1",
-				"ptype": "warmup",
-				"s1": "I prefer to read than to dance."}
-				*/
-		]; 
-
-actualEQx = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
-			{"story": "empath1", "ptype": "actual", "s1": "I can easily tell if someone else wants to enter a conversation."},
-			{"story": "empath2", "ptype": "actual", "s1": "I find it difficult to explain to others things that I understand easily, when they don't understand it the first time."},
-			{"story": "empath3", "ptype": "actual", "s1": "I really enjoy caring for other people."},
-			{"story": "empath4", "ptype": "actual", "s1": "I find it hard to know what to do in a social situation."},
-			{"story": "empath5", "ptype": "actual", "s1": "People often tell me that I went too far in driving my point in a discussion."},
-			{"story": "empath6", "ptype": "actual", "s1": "It doesn't bother me too much if I am late meeting a friend."},
-			{"story": "empath7", "ptype": "actual", "s1": "Friendships and relationships are just too difficult, so I tend to not bother with them."},
-			{"story": "empath8", "ptype": "actual", "s1": "I often find it difficult to judge if something is rude or polite."},
-			{"story": "empath9", "ptype": "actual", "s1": "In a conversation, I tend to focus on my own thoughts rather than on what my listener might be thinking."},
-			{"story": "empath10", "ptype": "actual", "s1": "When I was a child, I enjoyed cutting up worms to see what would happen."},
-			{"story": "empath11", "ptype": "actual", "s1": "I can pick up quickly if someone says one thing but means another."},
-			{"story": "empath12", "ptype": "actual", "s1": "It is hard for me to see why some things upset people so much."},
-			{"story": "empath13", "ptype": "actual", "s1": "I find it easy to put myself in somebody else's shoes."},
-			{"story": "empath14", "ptype": "actual", "s1": "I am good at predicting how someone will feel."},
-			{"story": "empath15", "ptype": "actual", "s1": "I am quick to spot when someone in a group is feeling awkward or uncomfortable."},
-			{"story": "empath16", "ptype": "actual", "s1": "If I say something that someone else is offended by, I think that that's their problem, not mine."},
-			{"story": "empath17", "ptype": "actual", "s1": "If anyone asked me if I liked their haircut, I would reply truthfully, even if I didn't like it."},
-			{"story": "empath18", "ptype": "actual", "s1": "I can't always see why someone should have felt offended by a remark."},
-			{"story": "empath19", "ptype": "actual", "s1": "Seeing people cry doesn't really upset me."},
-			{"story": "empath20", "ptype": "actual", "s1": "I am very blunt, which some people take to be rudeness, even though this is unintentional."},
-			{"story": "empath21", "ptype": "actual", "s1": "I don’t tend to find social situations confusing."},
-			{"story": "empath22", "ptype": "actual", "s1": "Other people tell me I am good at understanding how they are feeling and what they are ,thinking."},
-			{"story": "empath23", "ptype": "actual", "s1": "When I talk to people, I tend to talk about their experiences rather than my own."},
-			{"story": "empath24", "ptype": "actual", "s1": "It upsets me to see an animal in pain."},
-			{"story": "empath25", "ptype": "actual", "s1": "I am able to make decisions without being influenced by people's feelings."},
-			{"story": "empath26", "ptype": "actual", "s1": "I can easily tell if someone else is interested or bored with what I am saying."},
-			{"story": "empath27", "ptype": "actual", "s1": "I get upset if I see people suffering on news programmes."},
-			{"story": "empath28", "ptype": "actual", "s1": "Friends usually talk to me about their problems as they say that I am very understanding."},
-			{"story": "empath29", "ptype": "actual", "s1": "I can sense if I am intruding, even if the other person doesn't tell me."},
-			{"story": "empath30", "ptype": "actual", "s1": "People sometimes tell me that I have gone too far with teasing."},
-			{"story": "empath31", "ptype": "actual", "s1": "Other people often say that I am insensitive, though I don’t always see why."},
-			{"story": "empath32", "ptype": "actual", "s1": "If I see a stranger in a group, I think that it is up to them to make an effort to join in."},
-			{"story": "empath33", "ptype": "actual", "s1": "I usually stay emotionally detached when watching a film."},
-			{"story": "empath34", "ptype": "actual", "s1": "I can tune into how someone else feels rapidly and intuitively."},
-			{"story": "empath35", "ptype": "actual", "s1": "I can easily work out what another person might want to talk about."},
-			{"story": "empath36", "ptype": "actual", "s1": "I can tell if someone is masking their true emotion."},
-			{"story": "empath37", "ptype": "actual", "s1": "I don't consciously work out the rules of social situations."},
-			{"story": "empath38", "ptype": "actual", "s1": "I am good at predicting what someone will do."},
-			{"story": "empath39", "ptype": "actual", "s1": "I tend to get emotionally involved with a friend's problems."},
-			{"story": "empath40", "ptype": "actual", "s1": "I can usually appreciate the other person's viewpoint, even if I don't  agree with it."},
-		];
 actualEQ = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
 			{"story": "empath1", "ptype": "actual", "s1": "I can easily tell if someone else wants to enter a conversation."},
 			{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
 			{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},		
 		];
-
-warmupEyes = [/*{"story": "warmup1", "ptype": "warmup", "image": "eyes0", 'expressA': "Jealous", 'expressB': "Panicked", 'expressC': "Arrogant", 'expressD': "Hateful"},
-			*/]; 
-
-actualEyes = [{'story': 'eyes1', 'ptype': 'actual', 'image': 'eyes1', 'expressA': "Playful", 'expressB': "Comforted", 'expressC': "Irritated", 'expressD': "Bored"},
-			  {'story': 'eyes2', 'ptype': 'actual', 'image': 'eyes2', 'expressA': "Jealous", 'expressB': "Panicked", 'expressC': "Arrogant", 'expressD': "Hateful"},
-			];
-
-warmupInnu = [   {"story": "warmup1",
-				"ptype": "warmup",
-				'innuA': "hi", 'innuB': "hey", 'innuC': "hello", 'innuD': "sup", 'innuE': "whadup"},
-		]; 
-
-actualInnu = [   {"story": "actual",
-				"ptype": "warmup",
-				'innuA': "seeya", 'innuB': "bye", 'innuC': "later", 'innuD': "ttyl", 'innuE': "peaceout"},
-		]; 
-
-warmupPolite = [   {"story": "warmup1",
-				"ptype": "warmup",
-				'innuA': "hi", 'innuB': "hey", 'innuC': "hello", 'innuD': "sup", 'innuE': "whadup"},
-		]; 
-
-actualPolite = [   {"story": "actual",
-				"ptype": "warmup",
-				'innuA': "seeya", 'innuB': "bye", 'innuC': "later", 'innuD': "ttyl", 'innuE': "peaceout"},
-		]; 
-
-
-actualVocab = [{"story": "vocab1", "ptype": "actual", "target": "ADHESIVE", "test1":"glue","test2":"puissance","test3":"tradition","test4":"argument","test5":"latent","answer":"test3"},
-				{"story": "vocab2", "ptype": "actual", "target": "DREARY", "test1":"old","test2":"bloom","test3":"gloomy","test4":"correct","test5":"possible","answer":"test3"},
-		];
-//todo task javascript read in file for warmups and questions
 
 
 //if (Math.floor(Math.random() * 2)){
@@ -179,12 +89,7 @@ actualVocab = [{"story": "vocab1", "ptype": "actual", "target": "ADHESIVE", "tes
 //	//condition: epistemic
 //	stories = epistemic_warmup.randomize().concat(epistemic.randomize()); // warmup comes first, but otherwise randomize
 //}
-storiesEQ = warmupEQ.concat(actualEQ);
-storiesEyes = warmupEyes.concat(actualEyes);
-storiesInnu = warmupInnu.concat(actualInnu);
-storiesPolite = warmupPolite.concat(actualPolite);
-storiesVocab = actualVocab;
-
+storiesEQ = actualEQ;
 
 
 
@@ -195,21 +100,15 @@ var experiment = {
 	},
     storiesEQ: storiesEQ,
     totalTrials: storiesEQ.length,
-    storiesEyes: storiesEyes,
-    storiesInnu: storiesInnu,
-    storiesPolite: storiesPolite,
-    storiesVocab: storiesVocab,
+    
     //totalEyesTrials: storiesEyes.length,    
     trial: 0, //first trial will be trial number 0
     trialsEQ: [],
-    trialsEyes: [],
-    trialsInnu: [],
-    trialsPolite: [],
-    trialsVocab: [],
     demographics: {},
 	//**current_story: "",
 	
 	start: function() {
+		console.log("started");
 		var story = this.storiesEQ[this.trial];
 		//**this.current_story = story.shortname; //for checking when we've changed.
 		$('#s1').html(story.s1);
@@ -360,10 +259,11 @@ var experiment = {
     times: {},
     timer: function(stamp) {
 		this.times[stamp] = (new Date()).getTime();
-    }
+    },
 
 };
 
+showNextSlide();
 
 $(document).keypress(function(e) {
   if(e.which == 13) {
@@ -388,9 +288,4 @@ document.onkeypress = function(event) {
 	console.log(new Date().getTime());
 	i++;
 	$('#word').html(stamp);
-}
-
-times: {};
-timer = function(stamp) {
-	this.times[stamp] = (new Date()).getTime();
 }

@@ -30,7 +30,7 @@
   <p class="block-text">This HIT is a research study looking at how people understand the world. In this HIT, you will ##_________________##. 
   The entire HIT should take you about ##__________## minutes</p>
   <p class="block-text" style="width:400px"> Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact Joshua Hartshorne, at gameswithwords@gameswithwords.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p> 
-  <button type="button" onClick="this.blur(); showSlide('EQinstructions'); setTimeout(function(){$('#EQinstructions_button').show();},3000);">Continue</button>
+  <button type="button" onClick="this.blur(); showNextSlide(); setTimeout(function(){$('#instructions_button').show();},3000);">Continue</button>
 </div>
 <script language="JavaScript">
 function checkPreview() {
@@ -43,13 +43,13 @@ function checkPreview() {
 </script>
 
 
-<div class="slide" id="EQinstructions" style="display:none; ">
+<div class="slide" id="instructions" style="display:none; ">
     <h2>Self Based Reading Instructions</h2>
     <p>In this experiment, you will be shown a statement, one word at a time.  To read the next word, press any key on your keyboard.  Do not rush - make sure to read and understand the statement.  There are no right or wrong answers, or trick questions.<br /><br /><br />
     Example: <br />
     _____________.<br /><br /><br />
     There are 12 statements. This should take you 20-25 minutes, depending on your speed. Do only one HIT in this batch.<br /><br /></p>
-  <button id="EQinstructions_button" style="display:none;" type="button" onClick="this.blur(); $('#EQinstructions').hide(); experiment.start(); setTimeout(function(){$('#setup_button1').show();},3000);">Continue</button>
+  <button id="instructions_button" style="display:none;" type="button" onClick="this.blur(); showNextSlide();">Begin...</button>
 </div>
 
 <div class="slide" id="questions" style="display:none; ">
