@@ -134,6 +134,8 @@ actualEQx = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe
 		];
 actualEQ = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
 			{"story": "empath1", "ptype": "actual", "s1": "I can easily tell if someone else wants to enter a conversation."},
+			{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
+			{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},		
 		];
 
 warmupEyes = [/*{"story": "warmup1", "ptype": "warmup", "image": "eyes0", 'expressA': "Jealous", 'expressB': "Panicked", 'expressC': "Arrogant", 'expressD': "Hateful"},
@@ -212,7 +214,7 @@ var experiment = {
 		//**this.current_story = story.shortname; //for checking when we've changed.
 		$('#s1').html(story.s1);
 		this.timer("starttrial");
-		showSlide("EQquestions");
+		showSlide("questions");
 //		slideStage++;
 //		console.log(slideStage);
 	},
@@ -256,45 +258,7 @@ var experiment = {
 							"results": results});						//"a1": stronglyagree/slightlyagree/slightlydisagree/stronglydisagree
 	},
 
-	recordEyes: function(trial, answer) {
-		//feeling = this.storiesEyes[this.trial].answer
-		results={"a1": this.getEyeAnswer(answer)};
-		this.trialsEyes.push({	"trial": trial,
-							"story": this.storiesEyes[this.trial].story, 	//empath# or warmup#
-							"ptype": this.storiesEyes[this.trial].ptype, 	//actual or warmup
-							//"s1": this.storiesEyes[this.trial].s1,			//"statement"
-							"rt": this.times.stoptrial - this.times.starttrial,
-							"results": results});						
-	},
-
-	recordInnu: function(trial) {
-		var userRankings = $( "#sortableI" ).sortable( "toArray" );
-		results={"a1": this.getInnuAnswer(userRankings, trial)};
-		this.trialsInnu.push({	"trial": trial,
-							"story": this.storiesInnu[this.trial].story, 	
-							"ptype": this.storiesInnu[this.trial].ptype, 	
-							"rt": this.times.stoptrial - this.times.starttrial,
-							"results": results});						
-	},
-
-	recordPolite: function(trial) {
-		var userRankings = $( "#sortableP" ).sortable( "toArray" );
-		results={"a1": this.getPoliteAnswer(userRankings, trial)};
-		this.trialsPolite.push({	"trial": trial,
-							"story": this.storiesPolite[this.trial].story, 	
-							"ptype": this.storiesPolite[this.trial].ptype, 	
-							"rt": this.times.stoptrial - this.times.starttrial,
-							"results": results});						
-	},
-
-	recordVocab: function(trial, answer) {
-		results={"a1": answer};
-		this.trialsPolite.push({	"trial": trial,
-							"story": this.storiesPolite[this.trial].story, 	
-							"ptype": this.storiesPolite[this.trial].ptype, 	
-							"rt": this.times.stoptrial - this.times.starttrial,
-							"results": results});						
-	},
+	
 
 	getEyeAnswer: function(answer) {
 		if (answer == "A") {
@@ -342,24 +306,14 @@ var experiment = {
 
     
     end: function() {
-		//record demographic data
-		this.demographics.prevCompletion = $("#prevCompletion").val();
-		this.demographics.gender = $("#gender").val();
-		this.demographics.age = $("#age").val();
-		this.demographics.primaryLanguage = $("#primaryLanguage").val();
-		this.demographics.firstLanguage = $("#firstLanguage").val();
-		this.demographics.country = $("#country").val();
-		this.demographics.computers = $("#computers").val();
-		this.demographics.televisions = $("#televisions").val();
-		this.demographics.comments = $("#comments").val();
-
 		//finish up:
         showSlide("finished");
-//		slideStage++;
-//		console.log(slideStage);
         setTimeout(function() { turk.submit(experiment) }, 1500);
     },
 	
+    nextWord: function(sentence) {
+    	experiment.record
+    },
 
 	nextEQ: function(emp) {
 	    experiment.recordEQ(this.trial, emp); //send trial number as argument since this.trial may get updates before we record!
@@ -390,171 +344,24 @@ var experiment = {
 		//make answers invisible but continue button visible
 		
 		this.timer("starttrial");
-		showSlide("EQquestions"); //odd
-    },
-
-    nextEyes: function(answer) {
-    	////todo adjust answer and image update
-    	experiment.recordEyes(this.trial, answer); //send trial number as argument since this.trial may get updates before we record!
-		//advance, and see if we're done:
-		this.trial++;
-	        $('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
-		if (this.trial >= this.totalTrials) {
-			//showNextSlide(); 
-			showSlide('Innuinstructions');
-//			slideStage++;
-//			console.log(slideStage);
-			this.totalTrials = storiesInnu.length; //odd
-			this.trial = 0;  						//odd
-			return;}
-		if (this.trial>1){
-			$('#marble_init').hide();
-		}
-		
-		//make everything editable again:
-		$(':input').prop('disabled',false);
-
-		var story = this.storiesEyes[this.trial];
-		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#ansA').html(story.expressA);
-		$('#ansB').html(story.expressB);
-		$('#ansC').html(story.expressC);
-		$('#ansD').html(story.expressD);
-		var imagesrc = "images/" + story.image + ".png";
-		document.getElementById("eyesImage").src=imagesrc;
-
-		//make answers invisible but continue button visible
-		
-		this.timer("starttrial");
-		showSlide("Eyesquestions");
-		
+		console.log(this.times);
+		showSlide("questions"); //odd
     },
 
     
-    nextInnu: function() {
-	    experiment.recordInnu(this.trial); //send trial number as argument since this.trial may get updates before we record!
-		//advance, and see if we're done:
-		this.trial++;
-	        $('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
-		if (this.trial >= this.totalTrials)  {
-			//showNextSlide(); 
-			showSlide('Politeinstructions');
-//			slideStage++;
-//			console.log(slideStage);
-			this.totalTrials = storiesPolite.length; //odd
-			this.trial = 0;  						//odd
-			return;}
-		if (this.trial>1){
-			$('#marble_init').hide();
-		}
-		
-		//make everything editable again:
-		$(':input').prop('disabled',false);
-
-		var story = this.storiesInnu[this.trial];
-		$( "#sortableI" ).sortable('refresh');
-		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#innuA').html(story.innuA);
-		$('#innuB').html(story.innuB);
-		$('#innuC').html(story.innuC);
-		$('#innuD').html(story.innuD);
-		$('#innuE').html(story.innuE);
-
-		
-		//reset values
-		////rb1.reset();
-		//make answers invisible but continue button visible
-		
-		this.timer("starttrial");
-		showSlide("Innuquestions");
-		
-    },
-
-    nextPolite: function() {
-	    experiment.recordPolite(this.trial); //send trial number as argument since this.trial may get updates before we record!
-		//advance, and see if we're done:
-		this.trial++;
-	        $('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
-		if (this.trial >= this.totalTrials) {
-			//showNextSlide(); 
-			showSlide('Vocabinstructions');
-//			slideStage++;
-//			console.log(slideStage);
-			this.totalTrials = storiesVocab.length; //odd
-			this.trial = 0;  						//odd
-			return;}
-		if (this.trial>1){
-			$('#marble_init').hide();
-		}
-		
-		//make everything editable again:
-		$(':input').prop('disabled',false);
-
-		var story = this.storiesVocab[this.trial];
-		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#politeA').html(story.testA);
-		$('#politeB').html(story.testB);
-		$('#politeC').html(story.testC);
-		$('#politeD').html(story.testD);
-		$('#politeE').html(story.testE);
-
-		
-		//reset values
-		////rb1.reset();
-		//make answers invisible but continue button visible
-		
-		this.timer("starttrial");
-		showSlide("Politequestions");
-		
-    },
-
-
-    nextVocab: function(answer) {
-	    experiment.recordVocab(this.trial, answer); //send trial number as argument since this.trial may get updates before we record!
-		//advance, and see if we're done:
-		this.trial++;
-	        $('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
-		if (this.trial >= this.totalTrials) {this.background(); return;}
-		if (this.trial>1){
-			$('#marble_init').hide();
-		}
-		
-		//make everything editable again:
-		$(':input').prop('disabled',false);
-
-		var story = this.storiesVocab[this.trial];
-		$('#target').html(story.target);
-		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#test1').html(story.test1);
-		$('#test2').html(story.test2);
-		$('#test3').html(story.test3);
-		$('#test4').html(story.test4);
-		$('#test5').html(story.test5);
-
-		//reset values
-		////rb1.reset();
-		//make answers invisible but continue button visible
-		
-		this.timer("starttrial");
-		showSlide("Vocabquestions");
-		
-    },
-
-
 	
 	
 	
-    background: function() {
-    	showSlide("askInfo");
-//		slideStage++;
-//		console.log(slideStage);
-    },
+    //background: function() {
+    //	showSlide("askInfo");
+    //},
 	
     //this fuction get's called to add a time stamp: each time we move on to the next phase.
     times: {},
     timer: function(stamp) {
-	this.times[stamp] = (new Date()).getTime();
+		this.times[stamp] = (new Date()).getTime();
     }
+
 };
 
 
@@ -565,7 +372,25 @@ $(document).keypress(function(e) {
   }
 });
 
+i=0;
 document.onkeypress = function(event) {
+	console.log("HELLO");
 	//skip slide:
-	showNextSlide();
+	//showNextSlide();
+	/*console.log(i);
+	stamp = "stamp"+i.toString();
+	console.log(stamp);
+	console.log(new Date().getTime());
+	timer(stamp);
+	i++;
+	console.log(times);*/
+	stamp = "stamp"+i.toString();
+	console.log(new Date().getTime());
+	i++;
+	$('#word').html(stamp);
+}
+
+times: {};
+timer = function(stamp) {
+	this.times[stamp] = (new Date()).getTime();
 }

@@ -108,6 +108,16 @@ button[disabled] {
     text-align: left;
 }
 
+#questions {
+  text-align: center;
+  font-weight: normal;
+}
+
+#answers {
+  margin-top: 20%;
+  text-align: center;
+}
+
 #scale {
     margin: 0 auto;
     margin-top: 1em;
