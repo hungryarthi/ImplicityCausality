@@ -34,25 +34,11 @@ slideStage = 0;
 //now show the first (consent) slide:
 
 function showNextSlide() {
-	if(slides[slideStage] == "questions") {
-    	console.log("questions slide, start experiment:");
-    	experiment.start();
-    	console.log("experiment started?");
-
-    }
-
     $(".slide").hide();
     nextID = slides[slideStage];
-    //console.log(nextID);
     $("#"+nextID).show();
     slideStage++;
-
-    
-
 }
-
-
-
 
 function showSlide(id) {
     $(".slide").hide();
@@ -75,6 +61,14 @@ function isNumberKey(evt) {
     return true;
 }*/
 
+actualStatements = [{"story": "story1", "sent-pos": "He said 1positive.", "sent-neg": "He said 1negative.", "sent-neu": "He said 1neutral.", "sent-int": "He said 1interference."},
+					{"story": "story2", "sent-pos": "He said 2positive.", "sent-neg": "He said 2negative.", "sent-neu": "He said 2neutral.", "sent-int": "He said 2interference."},
+					{"story": "story3", "sent-pos": "He said 3positive.", "sent-neg": "He said 3negative.", "sent-neu": "He said 3neutral.", "sent-int": "He said 3interference."},
+					{"story": "story4", "sent-pos": "She said 1positive.", "sent-neg": "She said 1negative.", "sent-neu": "She said 1neutral.", "sent-int": "She said 1interference."},
+					{"story": "story5", "sent-pos": "She said 2positive.", "sent-neg": "She said 2negative.", "sent-neu": "She said 2neutral.", "sent-int": "She said 2interference."},
+					{"story": "story6", "sent-pos": "She said 3positive.", "sent-neg": "She said 3negative.", "sent-neu": "She said 3neutral.", "sent-int": "She said 3interference."},
+];
+
 actualEQ = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
 			{"story": "empath1", "ptype": "actual", "s1": "I can easily tell if someone else wants to enter a conversation."},
 			{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?"},
@@ -89,72 +83,91 @@ actualEQ = [{"story": "empath0", "ptype": "actual", "s1": "sample -warmup maybe?
 //	//condition: epistemic
 //	stories = epistemic_warmup.randomize().concat(epistemic.randomize()); // warmup comes first, but otherwise randomize
 //}
-storiesEQ = actualEQ;
+stories = randomOrder(actualStatements);
 
+function randomOrder(statements) {
+	console.log("randomize later");
+	return statements;
+}
 
+var keypressed = false;
 
 var experiment = {
-    times: {},
+	times: {},
     timer: function(stamp) {
 		this.times[stamp] = (new Date()).getTime();
 	},
-    storiesEQ: storiesEQ,
-    totalTrials: storiesEQ.length,
+    stories: stories,
+    totalTrials: stories.length,
     
     //totalEyesTrials: storiesEyes.length,    
     trial: 0, //first trial will be trial number 0
-    trialsEQ: [],
+    trials: [],
     demographics: {},
 	//**current_story: "",
 	
 	start: function() {
 		console.log("started");
-		var story = this.storiesEQ[this.trial];
+		//var story = this.stories[this.trial];
 		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#s1').html(story.s1);
-		this.timer("starttrial");
-		showSlide("questions");
-//		slideStage++;
-//		console.log(slideStage);
+		//$('#s1').html(story.s1);
+		//this.timer("starttrial");
+		this.nextSentence();
+		//showSlide("questions");
 	},
 
-	
-	/*validate: function(rb1) {
-		results={"q1": rb1.getValue()};
-		if (results.q1==null || results.q1==(-1)) {
-			alert ( "Please be sure to answer the question.");
-			return false;
-		};
-		if (this.stories[this.trial].ptype == "warmup"){
-			//validate warmup trial
-			if (this.stories[this.trial].expected == "pos"){
-				if (results.q1 > 65){
-					return true;
-				}else{
-					alert("Please read the question carefully and try answering again!");
-					return false;
-				};
-			}else{
-				if (results.q1 < 35){
-					return true;
-				}else{
-					alert("Please read the question carefully and try answering again!");
-					return false;
-				};				
-			};
-		}else{
-			return true;
+	nextWord: function(sentence) {
+		var words = sentence.split(" ");
+		current = 0;
+		rxnTimes = [];
+		while(current < words.length) {
+			console.log("while current<length");
+			$('#word').html(words[current]);
+			console.log(keypressed);
+			if(!keypressed){
+				rxnTime = (new Date()).getTime();
+				//keep looping until a key is pressed;
+			}
+
+			
+			console.log(keypressed);
+			console.log("___________");
+			//rxnTime = new Date().getTime();
+			keypressed = false;
+			rxnTimes.push(rxnTime);
+			current++;
 		}
-	},*/
+		$('#word').html("done...ready?");
+		console.log(rxnTimes);
+		return rxnTimes;
+	},
+
+	nextSentence: function() {
+		$('#word').html("Ready?????");
+		var sentence = this.stories[this.trial];
+		this.timer("starttrial");
+		//rxnTimes = nextWord(sentence); //show next word and record time between each word
+		rxnTimes = this.nextWord('This is a sentence.'); //show next word and record time between each word
+		experiment.record(rxnTimes, this.trial);
+
+		this.trial++;
+		$('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
+		
+		if (this.trial >= this.totalTrials) {
+			showNextSlide(); //completed all the sentences, so show final slides
+			return;}
+		
+		this.nextSentence();
+	},
 	
-	recordEQ: function(trial, emp) {
-		results={"a1": emp};
-		this.trialsEQ.push({	"trial": trial,
-							"story": this.storiesEQ[this.trial].story, 	//empath# or warmup#
-							"ptype": this.storiesEQ[this.trial].ptype, 	//actual or warmup
-							"s1": this.storiesEQ[this.trial].s1,			//"statement"
-							"rt": this.times.stoptrial - this.times.starttrial,
-							"results": results});						//"a1": stronglyagree/slightlyagree/slightlydisagree/stronglydisagree
+	record: function(trial, emp) {
+		// results={"a1": emp};
+		// this.trialsEQ.push({	"trial": trial,
+		// 					"story": this.storiesEQ[this.trial].story, 	//empath# or warmup#
+		// 					"ptype": this.storiesEQ[this.trial].ptype, 	//actual or warmup
+		// 					"s1": this.storiesEQ[this.trial].s1,			//"statement"
+		// 					"rt": this.times.stoptrial - this.times.starttrial,
+		// 					"results": results});						//"a1": stronglyagree/slightlyagree/slightlydisagree/stronglydisagree
 	},
 
 	
@@ -186,22 +199,6 @@ var experiment = {
 		return userAnswers;			
 	},
 
-	getPoliteAnswer: function(answer) { 
-		var userAnswers = [];
-		var i = 0;
-
-		while (i<answer.length) {
-			option = answer[i];
-			if (option == "innuA") { userAnswers.push(this.storiesPolite[this.trial].politeA);}
-			if (option == "innuB") { userAnswers.push(this.storiesPolite[this.trial].politeB);}
-			if (option == "innuC") { userAnswers.push(this.storiesPolite[this.trial].politeC);}
-			if (option == "innuD") { userAnswers.push(this.storiesPolite[this.trial].politeD);}
-			if (option == "innuE") { userAnswers.push(this.storiesPolite[this.trial].politeE);}
-			i++;
-		}
-		return userAnswers;			
-	},
-
 
     
     end: function() {
@@ -210,47 +207,7 @@ var experiment = {
         setTimeout(function() { turk.submit(experiment) }, 1500);
     },
 	
-    nextWord: function(sentence) {
-    	experiment.record
-    },
 
-	nextEQ: function(emp) {
-	    experiment.recordEQ(this.trial, emp); //send trial number as argument since this.trial may get updates before we record!
-		//advance, and see if we're done:
-		this.trial++;
-	        $('.bar').css('width', (200.0 * this.trial/this.totalTrials) + 'px');	//advance the completion bar at top
-		if (this.trial >= this.totalTrials) {
-			//showNextSlide(); 
-			showSlide('Eyesinstructions');
-//			slideStage++;
-//			console.log(slideStage);
-			this.totalTrials = storiesEyes.length; //odd
-			this.trial = 0;  						//odd
-			return;}
-		if (this.trial>1){
-			$('#marble_init').hide(); //todo - check, what does this do?
-		}
-		
-		//make everything editable again:
-		$(':input').prop('disabled',false);
-
-		var story = this.storiesEQ[this.trial];
-		//**this.current_story = story.shortname; //for checking when we've changed.
-		$('#s1').html(story.s1);
-		
-		//reset values
-		////rb1.reset();
-		//make answers invisible but continue button visible
-		
-		this.timer("starttrial");
-		console.log(this.times);
-		showSlide("questions"); //odd
-    },
-
-    
-	
-	
-	
     //background: function() {
     //	showSlide("askInfo");
     //},
@@ -263,18 +220,20 @@ var experiment = {
 
 };
 
-showNextSlide();
+
 
 $(document).keypress(function(e) {
-  if(e.which == 13) {
-    // enter pressed
-    alert("Hi there!");
+  if(e.which == 32) {
+    // spacebar pressed
+    keypressed=true;
+    //spacebarHit((new Date()).geTime());
   }
+  console.log(keypressed);
 });
 
-i=0;
-document.onkeypress = function(event) {
-	console.log("HELLO");
+//i=0;
+//document.onkeypress = function(event) {
+	//console.log("HELLO");
 	//skip slide:
 	//showNextSlide();
 	/*console.log(i);
@@ -284,8 +243,17 @@ document.onkeypress = function(event) {
 	timer(stamp);
 	i++;
 	console.log(times);*/
-	stamp = "stamp"+i.toString();
-	console.log(new Date().getTime());
-	i++;
-	$('#word').html(stamp);
-}
+	// stamp = "stamp"+i.toString();
+	// console.log(new Date().getTime());
+	// i++;
+	// $('#word').html(stamp);
+
+	//this.keypressed=true;
+//};
+
+
+
+
+
+//start whole experiment - from conscent slide.
+showNextSlide();

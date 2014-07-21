@@ -49,7 +49,7 @@ function checkPreview() {
     Example: <br />
     _____________.<br /><br /><br />
     There are 12 statements. This should take you 20-25 minutes, depending on your speed. Do only one HIT in this batch.<br /><br /></p>
-  <button id="instructions_button" style="display:none;" type="button" onClick="this.blur(); showNextSlide();">Begin...</button>
+  <button id="instructions_button" style="display:none;" type="button" onClick="this.blur(); showNextSlide(); experiment.start();">Begin...</button>
 </div>
 
 <div class="slide" id="questions" style="display:none; ">
@@ -66,7 +66,7 @@ function checkPreview() {
   <b>Click any key for the next word:</b> <br /><br />
   <div id="answers">
     	
-        <p id="qarea" class="sentence"><b><span id="word"></span></b><br /></p>
+        <p id="qarea" class="sentence"><b><span id="word">Ready?</span></b><br /></p>
        
         <div style="width:510px"><div style="float:left"><button type="button" onClick="this.blur(); $('#EQquestions :input').prop('disabled',true); experiment.timer('stoptrial'); $('#EQquestions').hide(); setTimeout(function(){experiment.nextEQ('stronglydisagree')},500);">Strongly Disagree</button></div></div>
         <br />
