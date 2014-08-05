@@ -139,13 +139,17 @@ var experiment = {
 			$('#word').html(words[current]);
 			//console.log(keypressed);
 			var t1 = new Date().getTime();
+			scraps = [];
+			scrap = 0;
 			while(!keypressed){
 			//	rxnTime = (new Date()).getTime();
 				//keep looping until a key is pressed;
-				if(isInfinite(t1,3000)){
-        			alert('Loop stopped after 3 seconds')
-        			break;
-    			} 
+				scrap = new Date().getTime();
+				scraps.push(scrap);
+				//if(isInfinite(t1,3000)){
+        		//	alert('Loop stopped after 3 seconds')
+        		//	break;
+    			//} 
 			}
 
 			
@@ -161,6 +165,29 @@ var experiment = {
 		wordTesting = false;
 		console.log(rxnTimes);
 		return rxnTimes;
+	},
+
+	//need a record of the current word displayed
+
+	nextWordX: function(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
+		console.log(pressTime); //record time here, with previous word
+		console.log((new Date()).getTime);
+		console.log("******");
+
+		//see what trial the last word was in
+		//see if prevWord was the final word in the sentence.
+			//if prevWord is not final word:
+				//display the nextWord ---and wait for key press.
+			//else, when lastWord is the final word in the sentence:
+				//update currentStory with getNextSentence
+				//and display the "Ready?" ---so when they press space, the intro sentence is displayed (a word in next story)
+					//(while "ready?" is displayed, when space hit, nextWordX will be called and the word in currentstory will display)
+
+
+
+
+
+
 	},
 
 	nextSentence: function() {
@@ -218,12 +245,27 @@ var experiment = {
 
 };
 
+storyNumber = 0;
+wordNumber = 0;  //0 = "Ready?" prompt, 1 = Introduction Sentence, 2+ = Words in sentence.
 
+storiesX = [{"Ready?", "This is Tom and Sally.", "Tom", "gave", "Sally", "a", "flower."}, 
+			{"Ready?", "Here comes Roger and Nimmy.", "Nimmy", "walked", "faster", "than", "Roger."},
+			{"Ready?", "This is a question...", "Answer - ", "Yes or No?"},
+			];
 
 $(document).keypress(function(e) {
   if(e.which == 32) {
     // spacebar pressed
+    var pressTime = (new Date()).getTime();
+    var wordOnScreen = $('#word').html();
     keypressed = true;
+
+    console.log("----------------------------------------");
+    console.log(pressTime);
+    console.log(wordOnScreen);
+    console.log(this.storyNumber);
+    console.log(this.wordNumber);
+    nextWordX(pressTime, wordOnScreen, this.storyNumber, this.wordNumber);
     //checkForNextWord((new Date()).getTime());
   }
 });
