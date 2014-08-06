@@ -115,7 +115,7 @@ var experiment = {
 		//**this.current_story = story.shortname; //for checking when we've changed.
 		//$('#s1').html(story.s1);
 		//this.timer("starttrial");
-		this.nextSentence();
+		//this.nextSentence();
 		//showSlide("questions");
 	},
 
@@ -126,7 +126,7 @@ var experiment = {
 		console.log("word testing!");
 		//nextWord(spacebarTime);
 	},
-
+/*
 	nextWord: function(sentence) {
 		wordTesting = true;
 		console.log(sentence);
@@ -166,22 +166,33 @@ var experiment = {
 		console.log(rxnTimes);
 		return rxnTimes;
 	},
-
+*/
 	//need a record of the current word displayed
 
-	nextWordX: function(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
+	nextWordY: function(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
 		console.log(pressTime); //record time here, with previous word
 		console.log((new Date()).getTime);
 		console.log("******");
 
-		//see what trial the last word was in
-		//see if prevWord was the final word in the sentence.
-			//if prevWord is not final word:
-				//display the nextWord ---and wait for key press.
-			//else, when lastWord is the final word in the sentence:
-				//update currentStory with getNextSentence
-				//and display the "Ready?" ---so when they press space, the intro sentence is displayed (a word in next story)
-					//(while "ready?" is displayed, when space hit, nextWordX will be called and the word in currentstory will display)
+	//see if prevWord was the final word in the sentence.
+		//if prevWord is not final word:
+		if(prevWordNumber < this.storiesX[prevStoryNumber].length){
+			//display the nextWord ---and wait for key press.
+			this.wordNumber++;
+			$('#word').html(this.storiesX[prevStoryNumber][wordNumber]);
+			console.log("next word displayed RIGHT?");
+		}
+		//else, when lastWord is the final word in the sentence:
+		else {
+			//update currentStory with getNextSentence
+			this.storyNumber++;
+			this.wordNumber = 0;
+			console.log("story number and word number RESET-ED");
+		}
+
+			
+			//and display the "Ready?" ---so when they press space, the intro sentence is displayed (a word in next story)
+				//(while "ready?" is displayed, when space hit, nextWordX will be called and the word in currentstory will display)
 
 
 
@@ -189,7 +200,7 @@ var experiment = {
 
 
 	},
-
+/*
 	nextSentence: function() {
 		$('#word').html("Ready?????");
 		var sentence = this.stories[this.trial].sentpos; //TODO: depending on the trial number, we should choose sentPos, sentNeg, etc.
@@ -213,6 +224,7 @@ var experiment = {
 
 		}
 	},
+	*/
 	
 	record: function(trial, emp) {
 		// results={"a1": emp};
@@ -245,13 +257,15 @@ var experiment = {
 
 };
 
-storyNumber = 0;
-wordNumber = 0;  //0 = "Ready?" prompt, 1 = Introduction Sentence, 2+ = Words in sentence.
+var storyNumber = 0;
+var wordNumber = -1;  //0 = "Ready?" prompt, 1 = Introduction Sentence, 2+ = Words in sentence.
 
-storiesX = [{"Ready?", "This is Tom and Sally.", "Tom", "gave", "Sally", "a", "flower."}, 
-			{"Ready?", "Here comes Roger and Nimmy.", "Nimmy", "walked", "faster", "than", "Roger."},
-			{"Ready?", "This is a question...", "Answer - ", "Yes or No?"},
+storiesX = [["Ready?", "This is Tom and Sally.", "Tom", "gave", "Sally", "a", "flower."], 
+			["Ready?", "Here comes Roger and Nimmy.", "Nimmy", "walked", "faster", "than", "Roger."],
+			["Ready?", "This is a question...", "Answer - ", "Yes or No?"],
 			];
+
+
 
 $(document).keypress(function(e) {
   if(e.which == 32) {
@@ -261,34 +275,14 @@ $(document).keypress(function(e) {
     keypressed = true;
 
     console.log("----------------------------------------");
-    console.log(pressTime);
-    console.log(wordOnScreen);
-    console.log(this.storyNumber);
-    console.log(this.wordNumber);
-    nextWordX(pressTime, wordOnScreen, this.storyNumber, this.wordNumber);
+    //console.log(pressTime);
+    //console.log(wordOnScreen);
+    //console.log(storyNumber);
+    //console.log(wordNumber);
+    nextWordX(pressTime, wordOnScreen, storyNumber, wordNumber);
     //checkForNextWord((new Date()).getTime());
   }
 });
-
-//i=0;
-//document.onkeypress = function(event) {
-	//console.log("HELLO");
-	//skip slide:
-	//showNextSlide();
-	/*console.log(i);
-	stamp = "stamp"+i.toString();
-	console.log(stamp);
-	console.log(new Date().getTime());
-	timer(stamp);
-	i++;
-	console.log(times);*/
-	// stamp = "stamp"+i.toString();
-	// console.log(new Date().getTime());
-	// i++;
-	// $('#word').html(stamp);
-
-	//this.keypressed=true;
-//};
 
 
 function isInfinite(t1,timeLimit){
@@ -298,6 +292,43 @@ function isInfinite(t1,timeLimit){
    		}
     	else return false;
 	};
+
+function nextWordX(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
+		//console.log(pressTime); //record time here, with previous word
+		//console.log((new Date()).getTime);
+		//console.log("******");
+
+	//see if prevWord was the final word in the sentence.
+		//if prevWord is not final word:
+		console.log(storiesX);
+		console.log(prevWordNumber);
+		console.log(storiesX[prevStoryNumber]);
+		if(wordNumber < storiesX[prevStoryNumber].length-1){
+			//display the nextWord ---and wait for key press.
+			wordNumber++;
+			$('#word').html(storiesX[prevStoryNumber][wordNumber]);
+			//console.log("WORD DISPLAYED:");
+			console.log(storiesX[prevStoryNumber][wordNumber]);
+		}
+		//else, when lastWord is the final word in the sentence:
+		else {
+			//update currentStory with getNextSentence
+			storyNumber++;
+			wordNumber = -1;
+			console.log("story number and word number RESET-ED");
+
+			//if done with stories, go to end slide:
+			if(storyNumber >= storiesX.length){
+				showNextSlide(); //go to Finished Slide
+			}
+			//else prompt the next sentence:
+			nextWordX((new Date()).getTime(), 'start...', storyNumber, wordNumber) 
+
+		}//and display the "Ready?" ---so when they press space, the intro sentence is displayed (a word in next story)
+				//(while "ready?" is displayed, when space hit, nextWordX will be called and the word in currentstory will display)
+
+	};
+
 
 
 //start whole experiment - from conscent slide.
