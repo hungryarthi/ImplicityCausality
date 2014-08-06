@@ -33,35 +33,23 @@ slideStage = 0;
 
 isRecording = false;
 
-//now show the first (consent) slide:
-
 function showNextSlide() {
     $(".slide").hide();
     nextID = slides[slideStage];
     $("#"+nextID).show();
+    
+    //check for special slide commands:
+    if(slides[slideStage] == 'questions'){  //if 'questions' slide, start experiment
+    	isRecording = true;
+    }
+    if(slides[slideStage] == 'finished'){   //if 'finished' slide, submit experiment to turk
+    	setTimeout(function() { turk.submit(experiment) }, 1500);
+    }
+
     slideStage++;
 }
 
-function showSlide(id) {
-    $(".slide").hide();
-    $("#"+id).show();
-}
 
-//showSlide('consent');
-
-
-
-
-/*
-//helper functions for validating and extracting entries:
-
-function isNumberKey(evt) {
-	var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-		return false;
-
-    return true;
-}*/
 
 actualStatements = [{"story": "story1", "sentpos": "He said 1positive.", "sent-neg": "He said 1negative.", "sent-neu": "He said 1neutral.", "sent-int": "He said 1interference."},
 					{"story": "story2", "sentpos": "He said 2positive.", "sent-neg": "He said 2negative.", "sent-neu": "He said 2neutral.", "sent-int": "He said 2interference."},
@@ -91,9 +79,6 @@ function randomOrder(statements) {
 	console.log("randomize later");
 	return statements;
 }
-
-var keypressed = false;
-var wordTesting = false;
 
 var experiment = {
 	times: {},
@@ -169,7 +154,7 @@ var experiment = {
 */
 	//need a record of the current word displayed
 
-	nextWordY: function(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
+/*	nextWordY: function(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spacebar was clicked - so display the next word. next -- record stop time
 		console.log(pressTime); //record time here, with previous word
 		console.log((new Date()).getTime);
 		console.log("******");
@@ -199,7 +184,7 @@ var experiment = {
 
 
 
-	},
+	},*/
 /*
 	nextSentence: function() {
 		$('#word').html("Ready?????");
@@ -235,19 +220,6 @@ var experiment = {
 		// 					"rt": this.times.stoptrial - this.times.starttrial,
 		// 					"results": results});						//"a1": stronglyagree/slightlyagree/slightlydisagree/stronglydisagree
 	},
-
-
-    
-    end: function() {
-		//finish up:
-        showSlide("finished");
-        setTimeout(function() { turk.submit(experiment) }, 1500);
-    },
-	
-
-    //background: function() {
-    //	showSlide("askInfo");
-    //},
 	
     //this fuction get's called to add a time stamp: each time we move on to the next phase.
     times: {},
@@ -272,15 +244,11 @@ $(document).keypress(function(e) {
     // spacebar pressed
     var pressTime = (new Date()).getTime();
     var wordOnScreen = $('#word').html();
-    keypressed = true;
-
+    
     console.log("----------------------------------------");
-    //console.log(pressTime);
-    //console.log(wordOnScreen);
-    //console.log(storyNumber);
-    //console.log(wordNumber);
-    nextWordX(pressTime, wordOnScreen, storyNumber, wordNumber);
-    //checkForNextWord((new Date()).getTime());
+    if(isRecording){
+	    nextWordX(pressTime, wordOnScreen, storyNumber, wordNumber);
+	}
   }
 });
 
@@ -331,5 +299,5 @@ function nextWordX(pressTime, prevWord, prevStoryNumber, prevWordNumber) { //spa
 
 
 
-//start whole experiment - from conscent slide.
+//start whole experiment now - from first (conscent) slide.
 showNextSlide();
