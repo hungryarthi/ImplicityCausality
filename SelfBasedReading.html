@@ -23,6 +23,27 @@
             allowClear: true
         }); });
     </script>
+
+    <script type="text/javascript">
+    window.onload = maxWindow;
+
+    function maxWindow() {
+        window.moveTo(0, 0);
+
+
+        if (document.all) {
+            top.window.resizeTo(screen.availWidth, screen.availHeight);
+        }
+
+        else if (document.layers || document.getElementById) {
+            if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
+                top.window.outerHeight = screen.availHeight;
+                top.window.outerWidth = screen.availWidth;
+            }
+        }
+    }
+
+</script> 
 </head>
 
 <body>
@@ -63,14 +84,12 @@ function checkPreview() {
  </div>  
 
   <br /><br />
-  <b>Click the SPACEBAR for the next word:</b> <br /><br />
+  <div id="prompt">
+  <b>Click the SPACEBAR for the next word. Do not reload page</b>
+  </div>
   <div id="answers">
     	
         <p id="qarea" class="sentence"><b><span id="word">Click the spacebar to start.</span></b><br /></p>
-       
-        <div style="width:510px"><div style="float:left"><button type="button" onClick="this.blur(); $('#EQquestions :input').prop('disabled',true); experiment.timer('stoptrial'); $('#EQquestions').hide(); setTimeout(function(){experiment.nextEQ('stronglydisagree')},500);">Strongly Disagree</button></div></div>
-        <br />
-        <br />
       
 	</div>
 </div>
