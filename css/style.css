@@ -113,8 +113,14 @@ button[disabled] {
   font-weight: normal;
 }
 
+#prompt {
+  margin-top: 10px;
+  margin-left: 10px;
+  text-align: left;
+}
+
 #answers {
-  margin-top: 20%;
+  margin-top: 25%;
   text-align: center;
 }
 
